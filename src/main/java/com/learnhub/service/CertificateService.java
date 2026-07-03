@@ -7,6 +7,8 @@ import com.learnhub.exception.ResourceNotFoundException;
 import com.learnhub.exception.UserNotFoundException;
 import com.learnhub.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,25 +21,30 @@ import java.util.stream.Collectors;
 public class CertificateService {
 
     private final UserRepository userRepository;
-
     private final CourseRepository courseRepository;
-
     private final ProgressRepository progressRepository;
-
     private final CertificateRepository certificateRepository;
 
-    public CertificateDTO generateCertificate(Long studentId, Long courseId){
+    public CertificateDTO generateCertificate(Long courseId){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
 
-        User student = userRepository.findById(studentId).orElseThrow(() -> new UserNotFoundException("Student Not Found"));
-
+        User student = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Student Not Found"));
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new ResourceNotFoundException("Course Not Found"));
 
-        Progress progress = progressRepository.findByStudentIdAndCourseId(studentId, courseId)
+        Progress progress = progressRepository.findByStudentIdAndCourseId(student.getId(), courseId)
                         .orElseThrow(() -> new RuntimeException("Progress Not Found"));
 
         if(!progress.getStatus().equalsIgnoreCase("COMPLETED")){
 
             throw new ResourceNotFoundException("Course Not Completed Yet");
+        }
+        if(certificateRepository
+                .findByStudentIdAndCourseId(student.getId(), courseId)
+                .isPresent()){
+
+            throw new RuntimeException("Certificate Already Generated");
         }
         Certificate certificate = new Certificate();
 
@@ -51,9 +58,17 @@ public class CertificateService {
 
         return CertificateDTOMapper.mapToCertificateDTO(saved);
     }
-    public List<CertificateDTO> getCertificatesByStudent(Long studentId){
+    public List<CertificateDTO> getCertificatesByStudent(){
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
 
-        return certificateRepository.findByStudentId(studentId)
+        String email = authentication.getName();
+
+        User student = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("Student Not Found"));
+
+
+        return certificateRepository.findByStudentId(student.getId())
                 .stream()
                 .map(CertificateDTOMapper::mapToCertificateDTO)
                 .collect(Collectors.toList());

@@ -1,12 +1,14 @@
 package com.learnhub.controller;
 
 import com.learnhub.dto.UserDTO;
+import com.learnhub.dto.mapper.RegisterRequestDTOMapper;
 import com.learnhub.service.JWTFilterService;
 import com.learnhub.dto.RegisterRequestDTO;
 import com.learnhub.entity.User;
 import com.learnhub.repository.UserRepository;
 import com.learnhub.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -18,7 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-
+;
     @Autowired
     private AuthService authService;
 
@@ -55,9 +57,16 @@ public class AuthController {
     }
 
     @GetMapping("/getuser")
-    public List<User> getUser(){
+    public List<RegisterRequestDTO> getUser(){
         List<User> users=userRepository.findAll();
-        return users;
+        return userRepository.findAll()
+                .stream()
+                .map(RegisterRequestDTOMapper::mapToRegisterRequestDTO)
+                .toList();
     }
 
+    @PostMapping("/addInstructor")
+    public ResponseEntity<?> addInstructor(@RequestBody User request) {
+        return ResponseEntity.ok(authService.addInstructor(request));
+    }
 }

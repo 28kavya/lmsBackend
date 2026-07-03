@@ -1,6 +1,7 @@
 package com.learnhub.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.aspectj.weaver.patterns.TypePatternQuestions;
@@ -25,7 +26,7 @@ public class Quiz {
     private Lesson lesson;
 
     @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private List<Question> questions;
+    @JsonManagedReference
+    private List<Question> questions;;
 
 }

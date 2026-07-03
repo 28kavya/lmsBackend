@@ -14,15 +14,15 @@ public class CertificateController {
 
     private final CertificateService certificateService;
 
-    @PostMapping("/generate/{studentId}/{courseId}")
-    public CertificateDTO generateCertificate(@PathVariable Long studentId, @PathVariable Long courseId){
+    @PostMapping("/generate/{courseId}")
+    public CertificateDTO generateCertificate( @PathVariable Long courseId){
 
-        return certificateService.generateCertificate(studentId, courseId);
+        return certificateService.generateCertificate(courseId);
     }
 
-    @GetMapping("/student/{studentId}")
-    public List<CertificateDTO> getStudentCertificates(@PathVariable Long studentId){
+    @GetMapping("/my")
+    public List<CertificateDTO> getStudentCertificates(){
 
-        return certificateService.getCertificatesByStudent(studentId);
+        return certificateService.getCertificatesByStudent();
     }
 }

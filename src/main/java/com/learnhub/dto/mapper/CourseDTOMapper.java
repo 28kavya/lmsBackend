@@ -13,7 +13,6 @@ public class CourseDTOMapper {
                .price(course.getPrice())
                .description(course.getDescription())
                .instructor(course.getInstructor())
-               .lessons(course.getLessons()!=null?course.getLessons().stream().map(LessonDtoMapper::mapToLessonDTO).toList(): List.of())
                .build();
     }
 }

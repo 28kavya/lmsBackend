@@ -12,12 +12,6 @@ public class ProgressController {
 
     private final ProgressService progressService;
 
-    @PostMapping("/{studentId}/{courseId}")
-    public ProgressResponseDTO updateProgress(@PathVariable Long studentId, @PathVariable Long courseId){
-
-        return progressService.updateProgress(studentId, courseId);
-    }
-
     @GetMapping("/{studentId}/{courseId}")
     public ProgressResponseDTO getProgress(@PathVariable Long studentId, @PathVariable Long courseId){
 

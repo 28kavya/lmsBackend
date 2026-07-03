@@ -20,13 +20,14 @@ public class User {
 
     private String name;
 
-    @Column(unique = true)
     private String email;
 
     private String password;
-
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Roles role;
 
     @OneToMany(mappedBy = "student")
     private List<Enrollment> enrollments;
+
+    private String adminCode;
 }

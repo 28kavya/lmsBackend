@@ -1,6 +1,8 @@
 package com.learnhub.service;
 
+import com.learnhub.dto.CourseAdminDTO;
 import com.learnhub.dto.CourseDTO;
+import com.learnhub.dto.mapper.CourseAdminDTOMapper;
 import com.learnhub.dto.mapper.CourseDTOMapper;
 import com.learnhub.entity.Course;
 import com.learnhub.exception.ResourceNotFoundException;
@@ -20,8 +22,20 @@ public class CourseService {
         return CourseDTOMapper.mapToCourseDTO(course1);
     }
 
-    public List<Course> getAllCourses() {
-        return courseRepository.findAll();
+    public List<CourseDTO> getAllCoursesForStudent() {
+
+        return courseRepository.findAll()
+                .stream()
+                .map(CourseDTOMapper::mapToCourseDTO)
+                .toList();
+    }
+
+    public List<CourseAdminDTO> getAllCoursesForAdmin() {
+
+        return courseRepository.findAll()
+                .stream()
+                .map(CourseAdminDTOMapper::mapToCourseAdminDTO)
+                .toList();
     }
 
     public CourseDTO getCourseById(Long id) {
@@ -30,7 +44,7 @@ public class CourseService {
         return CourseDTOMapper.mapToCourseDTO(course2);
     }
 
-    public Course updateCourse(Long id, Course updatedCourse) {
+    public CourseDTO updateCourse(Long id, Course updatedCourse) {
 
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course Not Found"));
@@ -40,7 +54,8 @@ public class CourseService {
         course.setPrice(updatedCourse.getPrice());
         course.setInstructor(updatedCourse.getInstructor());
 
-        return courseRepository.save(course);
+        Course course1=courseRepository.save(course);
+        return CourseDTOMapper.mapToCourseDTO(course1);
     }
 
     public String deleteCourse(Long id) {

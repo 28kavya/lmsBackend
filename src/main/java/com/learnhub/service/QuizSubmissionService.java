@@ -6,6 +6,8 @@ import com.learnhub.exception.ResourceNotFoundException;
 import com.learnhub.exception.UserNotFoundException;
 import com.learnhub.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,11 +19,16 @@ public class QuizSubmissionService {
     private final QuestionRepository questionRepository;
     private final StudentAnswerRepository studentAnswerRepository;
     private final QuizResultRepository quizResultRepository;
+    private final ProgressService progressService;
 
     public QuizResultResponse submitQuiz(QuizSubmissionRequest request) {
 
-        User student = userRepository
-                .findById(request.getStudentId())
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String email = authentication.getName();
+
+        User student = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Student Not Found"));
 
         Quiz quiz = quizRepository.findById(request.getQuizId())
@@ -62,6 +69,9 @@ public class QuizSubmissionService {
         quizResult.setPercentage(percentage);
 
         quizResultRepository.save(quizResult);
+        Long courseId = quiz.getLesson().getCourse().getId();
+
+        progressService.updateProgress(student.getId(), courseId);
 
         return new QuizResultResponse(score, totalQuestions, percentage);
     }

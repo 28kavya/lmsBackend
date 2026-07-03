@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/quiz")
+@RequestMapping("/api/quizsanswer")
 @RequiredArgsConstructor
 public class QuizSubmissionController {
 

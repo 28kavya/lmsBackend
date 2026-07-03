@@ -27,12 +27,15 @@ public class QuizService {
         quiz.setLesson(lesson);
         if(quiz.getQuestions()!=null) {
             quiz.getQuestions().forEach(question -> question.setQuiz(quiz));
+            System.out.println("Questions received: " + quiz.getQuestions());
         }
 
         Quiz savedQuiz= quizRepository.save(quiz);
 
         return QuizDtoMapper.mapToDto(savedQuiz);
+
     }
+
 
     public List<Quiz> getQuizzesByLesson(Long lessonId) {
         return quizRepository.findByLessonId(lessonId);

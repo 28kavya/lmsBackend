@@ -1,26 +1,17 @@
 package com.learnhub.dto;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
 import java.util.List;
-
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Builder
-public class CourseDTO {
-
+public class CourseAdminDTO {
     private Long id;
-
     private String title;
-
     private String description;
-
     private double price;
-
     private String instructor;
-
-
+    private List<EnrollmentDTO> enrollments;
 
 }

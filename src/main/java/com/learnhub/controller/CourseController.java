@@ -4,22 +4,21 @@ import com.learnhub.dto.CourseDTO;
 import com.learnhub.entity.Course;
 import com.learnhub.response.ResponseApi;
 import com.learnhub.service.CourseService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("api/course")
+@RequestMapping("/api/course")
 public class CourseController {
     @Autowired
     private CourseService courseService;
 
-    @PostMapping("addcourse")
+    @PostMapping("/addcourse")
     public ResponseEntity<ResponseApi>  addCourse(@RequestBody Course course) {
         CourseDTO courseDTO=courseService.addCourse(course);
         return new ResponseEntity<>(ResponseApi.builder()
@@ -28,8 +27,17 @@ public class CourseController {
     }
 
     @GetMapping("/getall")
-    public List<Course> getAllCourses() {
-        return courseService.getAllCourses();
+    public Object getAllCourses(Authentication authentication) {
+
+        boolean isAdmin = authentication.getAuthorities()
+                .stream()
+                .anyMatch(a -> a.getAuthority().equals("ADMIN"));
+
+        if (isAdmin) {
+            return courseService.getAllCoursesForAdmin();
+        }
+
+        return courseService.getAllCoursesForStudent();
     }
 
     @GetMapping("/getcourse/{id}")
@@ -38,7 +46,7 @@ public class CourseController {
     }
 
     @PutMapping("/updatecourse/{id}")
-    public Course updateCourse(@PathVariable Long id, @RequestBody Course course) {
+    public CourseDTO updateCourse(@PathVariable Long id, @RequestBody Course course) {
         return courseService.updateCourse(id, course);
     }
 
