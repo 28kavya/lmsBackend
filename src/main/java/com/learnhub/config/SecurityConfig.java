@@ -26,9 +26,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         return http
+                .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
-                .formLogin(Customizer.withDefaults())
-                .httpBasic(Customizer.withDefaults())
+//                .formLogin(Customizer.withDefaults())
+//                .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(req ->req
                         //AUTHCONTROLLER
                         .requestMatchers(HttpMethod.POST,"/api/auth/register","/api/auth/login").permitAll()
@@ -38,18 +39,18 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT,"/api/course/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.DELETE,"/api/course/**").hasAuthority("ADMIN")
                         //Admin +student
-                        .requestMatchers(HttpMethod.GET,"/api/certificate/my","/api/course/**").hasAnyAuthority("ADMIN","STUDENT")
+                        .requestMatchers(HttpMethod.GET,"/api/certificate/my","/api/course/**","/api/admin/dashboard","/api/student/**").hasAnyAuthority("ADMIN","STUDENT")
                         //Student+Instructor
                         .requestMatchers(HttpMethod.GET,"/api/lesson/**","/api/quiz/**","/api/questions/**").hasAnyAuthority("INSTRUCTOR","STUDENT")
                         //Student POST
-                        .requestMatchers(HttpMethod.POST,"/api/enroll/**","/api/quizanswer/**", "/api/certificate/generate/**").hasAuthority("STUDENT")
+                        .requestMatchers(HttpMethod.POST,"/api/enroll/**","/api/quizsanswer/**", "/api/certificate/generate/**").hasAuthority("STUDENT")
                         //Instructor POST
                         .requestMatchers(HttpMethod.POST,"/api/lesson/**","/api/quiz/**","/api/questions/**").hasAuthority("INSTRUCTOR")
                         //ALL
-                        .requestMatchers(HttpMethod.GET,"/api/progress/**").hasAnyAuthority("ADMIN","INSTRUCTOR","STUDENT")
+                        .requestMatchers(HttpMethod.GET,"/api/progress/**","/api/student/**").hasAnyAuthority("ADMIN","INSTRUCTOR","STUDENT")
 
                                 .anyRequest().authenticated())
-                        //disable below line and enable above three line to active security
+//                        disable below line and enable above three line to active security
 //                        .anyRequest().permitAll())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

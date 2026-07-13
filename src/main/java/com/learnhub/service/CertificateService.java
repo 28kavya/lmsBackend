@@ -22,7 +22,8 @@ public class CertificateService {
 
     private final UserRepository userRepository;
     private final CourseRepository courseRepository;
-    private final ProgressRepository progressRepository;
+    private final LessonProgressRepository lessonProgressRepository;
+    private final LessonRepository lessonRepository;
     private final CertificateRepository certificateRepository;
 
     public CertificateDTO generateCertificate(Long courseId){
@@ -32,13 +33,14 @@ public class CertificateService {
         User student = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Student Not Found"));
         Course course = courseRepository.findById(courseId).orElseThrow(() -> new ResourceNotFoundException("Course Not Found"));
+        long totalLessons = lessonRepository.countByCourseId(courseId);
 
-        Progress progress = progressRepository.findByStudentIdAndCourseId(student.getId(), courseId)
-                        .orElseThrow(() -> new RuntimeException("Progress Not Found"));
+        long completedLessons = lessonProgressRepository.countByUserIdAndLessonCourseIdAndVideoCompletedTrueAndQuizPassedTrue(
+                               student.getId(),
+                                courseId);
 
-        if(!progress.getStatus().equalsIgnoreCase("COMPLETED")){
-
-            throw new ResourceNotFoundException("Course Not Completed Yet");
+        if (completedLessons != totalLessons) {
+            throw new RuntimeException("Course Not Completed Yet");
         }
         if(certificateRepository
                 .findByStudentIdAndCourseId(student.getId(), courseId)

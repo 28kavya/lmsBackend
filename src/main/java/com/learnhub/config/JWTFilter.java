@@ -31,6 +31,9 @@ public class JWTFilter extends OncePerRequestFilter {
         String token = null;
         String userEmail = null;
 
+
+        System.out.println("Header"+header);
+
         // Extract JWT token
         if (header != null && header.startsWith("Bearer ")) {
             token = header.substring(7);

@@ -7,9 +7,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CertificateRepository
-        extends JpaRepository<Certificate, Long> {
+        extends JpaRepository<Certificate,Long>{
 
     List<Certificate> findByStudentId(Long studentId);
 
-    Optional<Certificate> findByStudentIdAndCourseId(Long id, Long courseId);
+    Optional<Certificate> findByStudentIdAndCourseId(Long studentId,
+                                                     Long courseId);
+
+    long countByStudentId(Long studentId);
+
 }

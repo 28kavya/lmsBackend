@@ -28,9 +28,15 @@ public class EnrollmentService {
 
     public EnrollmentDTO enrollStudent(Long userId, Long courseId) {
 
-        User student = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("Student Not Found"));
+        if (enrollmentRepository.existsByStudentIdAndCourseId(userId, courseId)) {
+            throw new RuntimeException("Student already enrolled in this course");
+        }
 
-        Course course = courseRepository.findById(courseId).orElseThrow(() -> new ResourceNotFoundException("Course Not Found"));
+        User student = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("Student Not Found"));
+
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Course Not Found"));
 
         Enrollment enrollment = new Enrollment();
 
@@ -38,7 +44,8 @@ public class EnrollmentService {
         enrollment.setCourse(course);
         enrollment.setStatus("ENROLLED");
 
-        enrollment=enrollmentRepository.save(enrollment);
+        enrollment = enrollmentRepository.save(enrollment);
+
         return EnrollmentDTOMapper.mapToEnrollmentDTO(enrollment);
     }
 

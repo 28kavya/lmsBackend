@@ -23,6 +23,8 @@ public class Lesson {
 
     private String videoUrl;
 
+    private Integer lessonOrder;
+
     @ManyToOne
     @JoinColumn(name = "course_id")
     @JsonIgnore

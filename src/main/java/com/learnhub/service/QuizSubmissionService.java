@@ -19,7 +19,7 @@ public class QuizSubmissionService {
     private final QuestionRepository questionRepository;
     private final StudentAnswerRepository studentAnswerRepository;
     private final QuizResultRepository quizResultRepository;
-    private final ProgressService progressService;
+    private final LessonProgressService lessonProgressService;
 
     public QuizResultResponse submitQuiz(QuizSubmissionRequest request) {
 
@@ -69,10 +69,12 @@ public class QuizSubmissionService {
         quizResult.setPercentage(percentage);
 
         quizResultRepository.save(quizResult);
-        Long courseId = quiz.getLesson().getCourse().getId();
+        boolean passed = percentage >= 70;
 
-        progressService.updateProgress(student.getId(), courseId);
-
+        lessonProgressService.updateQuizStatus(
+                quiz.getLesson().getId(),
+                passed
+        );
         return new QuizResultResponse(score, totalQuestions, percentage);
     }
 }
