@@ -19,16 +19,36 @@ public class Course {
     private String title;
     private String description;
     private double price;
-    private String instructor;
-    @OneToMany(mappedBy = "course")
+
+    @ManyToOne
+    @JoinColumn(name="instructor_id")
+    private User instructor;
+    @OneToMany(mappedBy = "course",cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<Enrollment> enrollments;
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "course",cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
     @JsonIgnore
     private List<Lesson> lessons;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "instructor_id")
 //    private Instructor instructor;
+@OneToMany(
+        mappedBy = "course",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+)
+@JsonIgnore
+private List<Certificate> certificates;
 
+    @OneToMany(
+            mappedBy = "course",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JsonIgnore
+    private List<Progress> progresses;
 
 }

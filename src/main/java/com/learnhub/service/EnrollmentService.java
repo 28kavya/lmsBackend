@@ -43,10 +43,13 @@ public class EnrollmentService {
         enrollment.setStudent(student);
         enrollment.setCourse(course);
         enrollment.setStatus("ENROLLED");
+        Enrollment enrollment1 = enrollmentRepository.save(enrollment);
 
-        enrollment = enrollmentRepository.save(enrollment);
+        System.out.println("Enrollment ID : " + enrollment.getId());
+        System.out.println("Student : " + enrollment.getStudent());
+        System.out.println("Course : " + enrollment.getCourse());
 
-        return EnrollmentDTOMapper.mapToEnrollmentDTO(enrollment);
+        return EnrollmentDTOMapper.mapToEnrollmentDTO(enrollment1);
     }
 
     public List<Enrollment> getAllEnrollments() {

@@ -25,8 +25,16 @@ public class Quiz {
     @JsonIgnore
     private Lesson lesson;
 
-    @OneToMany(mappedBy = "quiz", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "quiz",    cascade = CascadeType.ALL,
+            orphanRemoval = true)
     @JsonManagedReference
-    private List<Question> questions;;
+    private List<Question> questions;
+    @OneToMany(
+            mappedBy = "quiz",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JsonIgnore
+    private List<QuizResult> quizResults;
 
 }

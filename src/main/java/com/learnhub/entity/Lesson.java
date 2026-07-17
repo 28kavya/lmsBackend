@@ -29,6 +29,15 @@ public class Lesson {
     @JoinColumn(name = "course_id")
     @JsonIgnore
     private Course course;
-    @OneToMany(mappedBy = "lesson", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "lesson",    cascade = CascadeType.ALL,
+            orphanRemoval = true)
     private List<Quiz> quizzes;
+
+    @OneToMany(
+            mappedBy = "lesson",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @JsonIgnore
+    private List<LessonProgress> lessonProgresses;
 }

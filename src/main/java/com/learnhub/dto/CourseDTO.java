@@ -20,6 +20,7 @@ public class CourseDTO {
     private double price;
 
     private String instructor;
+    private int students;
 
 
 

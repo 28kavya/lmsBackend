@@ -12,7 +12,12 @@ public class CourseDTOMapper {
                .title(course.getTitle())
                .price(course.getPrice())
                .description(course.getDescription())
-               .instructor(course.getInstructor())
+               .instructor(
+                       course.getInstructor() != null
+                               ? course.getInstructor().getName()
+                               : null
+               )
+               .students(course.getEnrollments().size())
                .build();
     }
 }

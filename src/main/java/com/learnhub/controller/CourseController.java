@@ -1,7 +1,15 @@
 package com.learnhub.controller;
 
+import com.learnhub.dto.CourseAdminDTO;
 import com.learnhub.dto.CourseDTO;
+import com.learnhub.dto.InstructorDTO;
+import com.learnhub.dto.StudentDTO;
+import com.learnhub.dto.mapper.InstructorDTOMapper;
+import com.learnhub.dto.mapper.StudentDtoMapper;
 import com.learnhub.entity.Course;
+import com.learnhub.entity.Roles;
+import com.learnhub.entity.User;
+import com.learnhub.repository.UserRepository;
 import com.learnhub.response.ResponseApi;
 import com.learnhub.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +25,43 @@ import java.util.List;
 public class CourseController {
     @Autowired
     private CourseService courseService;
-
-    @PostMapping("/addcourse")
-    public ResponseEntity<ResponseApi>  addCourse(@RequestBody Course course) {
-        CourseDTO courseDTO=courseService.addCourse(course);
-        return new ResponseEntity<>(ResponseApi.builder()
-                .message("Course Created")
-                .data(courseDTO).build(), HttpStatus.CREATED);
+    @Autowired
+    private UserRepository userRepository;
+    @PostMapping("/courses")
+    public ResponseEntity<Course> addCourse(@RequestBody CourseAdminDTO dto){
+        return ResponseEntity.ok(courseService.addCourse(dto));
     }
+//    @GetMapping("/instructors")
+//    public List<User> getAllInstructors(){
+//
+//        return userRepository.findByRole(Roles.INSTRUCTOR);
+//
+//    }
+@GetMapping("/instructors")
+public List<InstructorDTO> getAllInstructors() {
+
+    return userRepository.findByRole(Roles.INSTRUCTOR)
+            .stream()
+            .map(InstructorDTOMapper::map)
+            .toList();
+}
+    @GetMapping("/students")
+    public List<User> getAllStudents(){
+
+        return userRepository.findByRole(Roles.STUDENT);
+
+    }
+    //enrollment details
+    @GetMapping("/studentsenrollments")
+    public List<StudentDTO> getStudents() {
+
+        return userRepository.findByRole(Roles.STUDENT)
+                .stream()
+                .map(StudentDtoMapper::map)
+                .toList();
+    }
+
+
 
     @GetMapping("/getall")
     public Object getAllCourses(Authentication authentication) {
@@ -39,15 +76,18 @@ public class CourseController {
 
         return courseService.getAllCoursesForStudent();
     }
-
     @GetMapping("/getcourse/{id}")
-    public CourseDTO getCourseById(@PathVariable Long id) {
-        return courseService.getCourseById(id);
+    public ResponseEntity<CourseAdminDTO> getCourseById(@PathVariable Long id) {
+        CourseAdminDTO course = courseService.getCourseById(id);
+        return ResponseEntity.ok(course);
     }
-
     @PutMapping("/updatecourse/{id}")
-    public CourseDTO updateCourse(@PathVariable Long id, @RequestBody Course course) {
-        return courseService.updateCourse(id, course);
+    public ResponseEntity<CourseAdminDTO> updateCourse(
+            @PathVariable Long id,
+            @RequestBody CourseDTO updatedCourse) {
+
+        CourseAdminDTO course = courseService.updateCourse(id, updatedCourse);
+        return ResponseEntity.ok(course);
     }
 
     @DeleteMapping("/deletecourse/{id}")

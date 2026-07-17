@@ -74,7 +74,7 @@ public class StudentDashboardService {
                             course.getId(),
                             course.getTitle(),
                             course.getDescription(),
-                            course.getInstructor(),
+                            course.getInstructor().toString(),
                             course.getPrice(),
                             progress
                     )

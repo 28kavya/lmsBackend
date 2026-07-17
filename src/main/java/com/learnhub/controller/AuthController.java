@@ -62,8 +62,9 @@ public class AuthController {
 
                 // Generate token using the full user
                 String token = jwtFilter.generateToken(user);
+                System.out.println(user.getName());
 
-                return ResponseEntity.ok(new LoginResponse(token));
+                return ResponseEntity.ok(new LoginResponse(token,user.getRole().name(),user.getName()));
             }
 
         } catch (BadCredentialsException e) {

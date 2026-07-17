@@ -5,8 +5,11 @@ import com.learnhub.dto.CourseDTO;
 import com.learnhub.dto.mapper.CourseAdminDTOMapper;
 import com.learnhub.dto.mapper.CourseDTOMapper;
 import com.learnhub.entity.Course;
+import com.learnhub.entity.Instructor;
+import com.learnhub.entity.User;
 import com.learnhub.exception.ResourceNotFoundException;
 import com.learnhub.repository.CourseRepository;
+import com.learnhub.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +20,20 @@ public class CourseService {
     @Autowired
     private CourseRepository courseRepository;
 
-    public CourseDTO addCourse(Course course) {
-        Course course1= courseRepository.save(course);
-        return CourseDTOMapper.mapToCourseDTO(course1);
+    @Autowired
+    private UserRepository userRepository;
+    public Course addCourse(CourseAdminDTO dto) {
+
+        User instructor = userRepository.findById(dto.getInstructorId())
+                .orElseThrow(() -> new RuntimeException("Instructor not found"));
+
+        Course course = new Course();
+        course.setTitle(dto.getTitle());
+        course.setDescription(dto.getDescription());
+        course.setPrice(dto.getPrice());
+        course.setInstructor(instructor);
+
+        return courseRepository.save(course);
     }
 
     public List<CourseDTO> getAllCoursesForStudent() {
@@ -32,31 +46,48 @@ public class CourseService {
 
     public List<CourseAdminDTO> getAllCoursesForAdmin() {
 
-        return courseRepository.findAll()
-                .stream()
+        List<Course> courses = courseRepository.findAll();
+
+        for (Course c : courses) {
+            System.out.println("Course: " + c.getTitle());
+            System.out.println("Instructor: " + c.getInstructor());
+            if (c.getInstructor() != null) {
+                System.out.println("Instructor Name: " + c.getInstructor().getName());
+            }
+        }
+
+        return courses.stream()
                 .map(CourseAdminDTOMapper::mapToCourseAdminDTO)
                 .toList();
     }
 
-    public CourseDTO getCourseById(Long id) {
+    public CourseAdminDTO getCourseById(Long id) {
         Course course2=courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course Not Found"));
-        return CourseDTOMapper.mapToCourseDTO(course2);
+        return CourseAdminDTOMapper.mapToCourseAdminDTO(course2);
     }
 
-    public CourseDTO updateCourse(Long id, Course updatedCourse) {
+    public CourseAdminDTO updateCourse(Long id, CourseDTO updatedCourse) {
 
         Course course = courseRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Course Not Found"));
+                .orElseThrow(() -> new RuntimeException("Course not found"));
 
         course.setTitle(updatedCourse.getTitle());
         course.setDescription(updatedCourse.getDescription());
         course.setPrice(updatedCourse.getPrice());
-        course.setInstructor(updatedCourse.getInstructor());
 
-        Course course1=courseRepository.save(course);
-        return CourseDTOMapper.mapToCourseDTO(course1);
+
+        User exeUser = userRepository.findByName(updatedCourse.getInstructor()).get();
+        course.setInstructor(exeUser);
+        // if you have these fields
+        // course.setCategory(updatedCourse.getCategory());
+        // course.setDuration(updatedCourse.getDuration());
+        // course.setImage(updatedCourse.getImage());
+
+         Course course1=  courseRepository.save(course);
+        return CourseAdminDTOMapper.mapToCourseAdminDTO(course1);
     }
+
 
     public String deleteCourse(Long id) {
 

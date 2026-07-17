@@ -27,8 +27,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Roles role;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student",cascade = CascadeType.ALL,
+    orphanRemoval = true)
     private List<Enrollment> enrollments;
 
     private String adminCode;
+
+    @OneToMany(mappedBy = "instructor")
+    @JsonIgnore
+    private List<Course> courses;
+
 }
