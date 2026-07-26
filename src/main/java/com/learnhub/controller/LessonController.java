@@ -14,9 +14,12 @@ public class LessonController {
     @Autowired
     private LessonService lessonService;
 
-    @PostMapping("/addlesson/{courseId}")
-    public LessonDTO addLesson(@PathVariable Long courseId, @RequestBody Lesson lesson) {
-        return lessonService.addLesson(courseId, lesson);
+
+    @PostMapping("/create")
+    public Lesson createLesson(@RequestBody LessonDTO dto){
+
+        return lessonService.addLesson(dto);
+
     }
 
     @GetMapping("/getlesson/{courseId}")

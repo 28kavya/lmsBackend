@@ -20,15 +20,21 @@ public class LessonService {
     @Autowired
     private  CourseRepository courseRepository;
 
-    public LessonDTO addLesson(Long courseId, Lesson lesson) {
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new ResourceNotFoundException("Course Not Found"));
+    public Lesson addLesson(LessonDTO dto){
 
+        Course course = courseRepository.findById(dto.getCourseId())
+                .orElseThrow(() ->
+                        new RuntimeException("Course not found"));
+
+        Lesson lesson = new Lesson();
+
+        lesson.setTitle(dto.getTitle());
+        lesson.setVideoUrl(dto.getVideoUrl());
         lesson.setCourse(course);
-        Lesson l=lessonRepository.save(lesson);
-        return LessonDtoMapper.mapToLessonDTO(l);
-    }
 
+        return lessonRepository.save(lesson);
+
+    }
     public List<LessonDTO> getLessonsByCourse(Long courseId) {
         List<Lesson> existingLesson= lessonRepository.findByCourseId(courseId);
 
