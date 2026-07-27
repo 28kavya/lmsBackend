@@ -19,6 +19,9 @@ public class LessonDTO {
 
     private String videoUrl;
 
+    private Integer lessonOrder;
+    private String lessonName;
+
     private Long courseId;
 
     private List<QuizDTO> quizzes;

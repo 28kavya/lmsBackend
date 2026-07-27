@@ -28,7 +28,7 @@ public class User {
     private Roles role;
 
     @OneToMany(mappedBy = "student",cascade = CascadeType.ALL,
-    orphanRemoval = true)
+            orphanRemoval = true)
     private List<Enrollment> enrollments;
 
     private String adminCode;

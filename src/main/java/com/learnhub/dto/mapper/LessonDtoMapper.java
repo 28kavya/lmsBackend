@@ -14,6 +14,7 @@ public class LessonDtoMapper {
                 .description(lesson.getDescription())
                 .videoUrl(lesson.getVideoUrl())
                 .courseId(lesson.getCourse().getId())
+                .lessonOrder(lesson.getLessonOrder())
                 .quizzes(lesson.getQuizzes()!=null?lesson.getQuizzes().stream().map(QuizDtoMapper::mapToDto).toList(): List.of())
                 .build();
 

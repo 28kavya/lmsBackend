@@ -19,11 +19,13 @@ public class Lesson {
 
     private String title;
 
+    @Column(name = "description")
     private String description;
 
-    private String videoUrl;
-
+    @Column(name = "lesson_order")
     private Integer lessonOrder;
+
+    private String videoUrl;
 
     @ManyToOne
     @JoinColumn(name = "course_id")

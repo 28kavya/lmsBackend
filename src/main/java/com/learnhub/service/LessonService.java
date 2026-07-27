@@ -27,13 +27,20 @@ public class LessonService {
                         new RuntimeException("Course not found"));
 
         Lesson lesson = new Lesson();
+        System.out.println("====== LESSON DTO ======");
+        System.out.println("Title        : " + dto.getTitle());
+        System.out.println("Description  : " + dto.getDescription());
+        System.out.println("Lesson Order : " + dto.getLessonOrder());
+        System.out.println("Video URL    : " + dto.getVideoUrl());
+        System.out.println("Course ID    : " + dto.getCourseId());
 
         lesson.setTitle(dto.getTitle());
+        lesson.setDescription(dto.getDescription());
         lesson.setVideoUrl(dto.getVideoUrl());
+        lesson.setLessonOrder(dto.getLessonOrder());
         lesson.setCourse(course);
 
         return lessonRepository.save(lesson);
-
     }
     public List<LessonDTO> getLessonsByCourse(Long courseId) {
         List<Lesson> existingLesson= lessonRepository.findByCourseId(courseId);

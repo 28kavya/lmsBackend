@@ -31,20 +31,20 @@ public class CourseController {
     public ResponseEntity<Course> addCourse(@RequestBody CourseAdminDTO dto){
         return ResponseEntity.ok(courseService.addCourse(dto));
     }
-//    @GetMapping("/instructors")
+    //    @GetMapping("/instructors")
 //    public List<User> getAllInstructors(){
 //
 //        return userRepository.findByRole(Roles.INSTRUCTOR);
 //
 //    }
-@GetMapping("/instructors")
-public List<InstructorDTO> getAllInstructors() {
+    @GetMapping("/instructors")
+    public List<InstructorDTO> getAllInstructors() {
 
-    return userRepository.findByRole(Roles.INSTRUCTOR)
-            .stream()
-            .map(InstructorDTOMapper::map)
-            .toList();
-}
+        return userRepository.findByRole(Roles.INSTRUCTOR)
+                .stream()
+                .map(InstructorDTOMapper::map)
+                .toList();
+    }
     @GetMapping("/students")
     public List<User> getAllStudents(){
 
