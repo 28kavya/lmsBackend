@@ -59,6 +59,8 @@ public class LessonProgressService {
 
         User user = getLoggedInUser();
 
+        System.out.println("USER ID "+user.getId());
+
         LessonProgress progress =
                 lessonProgressRepository
                         .findByUserIdAndLessonId(user.getId(),lessonId)

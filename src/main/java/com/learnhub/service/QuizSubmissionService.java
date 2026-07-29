@@ -36,6 +36,8 @@ public class QuizSubmissionService {
 
         int score = 0;
 
+
+
         for (AnswerRequest answerRequest : request.getAnswers()) {
 
             Question question = questionRepository.findById(answerRequest.getQuestionId())
@@ -51,10 +53,15 @@ public class QuizSubmissionService {
 
             studentAnswerRepository.save(studentAnswer);
 
-            if (question.getCorrectAnswer().equalsIgnoreCase(answerRequest.getSelectedAnswer())) {
+            if (question.getCorrectAnswer() != null
+                    && answerRequest.getSelectedAnswer() != null
+                    && question.getCorrectAnswer().equalsIgnoreCase(
+                    answerRequest.getSelectedAnswer())){
                 score++;
             }
         }
+
+
 
         int totalQuestions = request.getAnswers().size();
 
@@ -71,10 +78,13 @@ public class QuizSubmissionService {
         quizResultRepository.save(quizResult);
         boolean passed = percentage >= 70;
 
-        lessonProgressService.updateQuizStatus(
-                quiz.getLesson().getId(),
-                passed
-        );
+        System.err.println("abvbbbbfdhhdh: "+quiz.getLesson().getId());
+        if (quiz.getLesson() != null) {
+            lessonProgressService.updateQuizStatus(
+                    quiz.getLesson().getId(),
+                    passed
+            );
+        }
         return new QuizResultResponse(score, totalQuestions, percentage);
     }
 }

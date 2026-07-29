@@ -1,6 +1,7 @@
 package com.learnhub.controller;
 
 import com.learnhub.dto.CourseDTO;
+import com.learnhub.dto.InstructorStudentDTO;
 import com.learnhub.service.InstructorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -26,4 +27,9 @@ public class InstructorController {
 
     }
 
+    @GetMapping("/students")
+    public List<InstructorStudentDTO> getStudents(Authentication authentication) {
+
+        return instructorService.getStudents(authentication.getName());
+    }
 }

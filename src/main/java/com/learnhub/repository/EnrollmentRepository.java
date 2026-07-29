@@ -1,6 +1,7 @@
 package com.learnhub.repository;
 
 import com.learnhub.entity.Enrollment;
+import com.learnhub.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -20,5 +21,5 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment,Long> {
     long countByStudentIdAndStatus(Long studentId,String status);
 
     boolean existsByStudentIdAndCourseId(Long studentId, Long courseId);
-
+    List<Enrollment> findByCourseInstructor(User instructor);
 }

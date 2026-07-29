@@ -25,6 +25,4 @@ public class StudentAnswer {
     private String selectedAnswer;
 
 
-
-
 }

@@ -32,7 +32,9 @@ public class AuthService {
 
         user.setName(request.getName());
         user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword())); // Directly storing password
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        // Directly storing password
+        user.setAdminCode(request.getAdminCode());
         if(request.getEmail().equalsIgnoreCase(ADMIN_EMAIL)
                 && ADMIN_CODE.equals(request.getAdminCode())){
 

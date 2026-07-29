@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-;
+
     @Autowired
     private AuthService authService;
 
@@ -43,7 +43,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User request) {
-
+        System.out.println("LOGIN API CALLED");
         try {
 
             Authentication authentication =
