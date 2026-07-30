@@ -18,6 +18,8 @@ public class Lesson {
     private Long id;
 
     private String title;
+    @Column(nullable = false)
+    private String quizTitle;
 
     @Column(name = "description")
     private String description;

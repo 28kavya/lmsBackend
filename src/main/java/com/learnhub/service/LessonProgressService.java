@@ -8,16 +8,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import java.time.LocalDate;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 public class LessonProgressService {
 
     private final LessonRepository lessonRepository;
-
     private final LessonProgressRepository lessonProgressRepository;
-
     private final UserRepository userRepository;
+    private final CertificateRepository certificateRepository;
 
     private User getLoggedInUser(){
 
@@ -68,8 +69,43 @@ public class LessonProgressService {
                                 new RuntimeException("Video not completed"));
 
         progress.setQuizPassed(passed);
-
         lessonProgressRepository.save(progress);
+        if (passed) {
+
+            Long courseId = progress.getLesson().getCourse().getId();
+
+            long totalLessons = lessonRepository.countByCourseId(courseId);
+
+            long completedLessons =
+                    lessonProgressRepository
+                            .countByUserIdAndLessonCourseIdAndVideoCompletedTrueAndQuizPassedTrue(
+                                    user.getId(),
+                                    courseId);
+
+            if (totalLessons == completedLessons) {
+
+                boolean exists =
+                        certificateRepository.existsByStudentIdAndCourseId(
+                                user.getId(),
+                                courseId);
+
+                if (!exists) {
+
+                    Certificate certificate = new Certificate();
+
+                    certificate.setStudent(user);
+
+                    certificate.setCourse(progress.getLesson().getCourse());
+
+                    certificate.setIssuedDate(LocalDate.now());
+
+                    certificate.setCertificateNumber(
+                            UUID.randomUUID().toString());
+
+                    certificateRepository.save(certificate);
+                }
+            }
+        }
 
     }
 

@@ -13,7 +13,7 @@ public interface CertificateRepository
 
     Optional<Certificate> findByStudentIdAndCourseId(Long studentId,
                                                      Long courseId);
-
+    boolean existsByStudentIdAndCourseId(Long studentId, Long courseId);
     long countByStudentId(Long studentId);
 
 }
