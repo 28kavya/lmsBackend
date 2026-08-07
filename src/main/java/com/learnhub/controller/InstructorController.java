@@ -5,9 +5,7 @@ import com.learnhub.dto.InstructorStudentDTO;
 import com.learnhub.service.InstructorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,5 +29,11 @@ public class InstructorController {
     public List<InstructorStudentDTO> getStudents(Authentication authentication) {
 
         return instructorService.getStudents(authentication.getName());
+    }
+    @DeleteMapping("/delete/{id}")
+    public String deleteInstructor(@PathVariable Long id) {
+
+        return instructorService.deleteInstructor(id);
+
     }
 }

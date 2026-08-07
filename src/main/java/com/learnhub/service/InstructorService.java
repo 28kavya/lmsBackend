@@ -3,6 +3,7 @@ package com.learnhub.service;
 import com.learnhub.dto.CourseDTO;
 import com.learnhub.dto.InstructorStudentDTO;
 import com.learnhub.dto.mapper.CourseDTOMapper;
+import com.learnhub.entity.Roles;
 import com.learnhub.entity.User;
 import com.learnhub.repository.CourseRepository;
 import com.learnhub.repository.EnrollmentRepository;
@@ -55,4 +56,25 @@ public class InstructorService {
                 .toList();
     }
 
+    public String deleteInstructor(Long id) {
+
+        User instructor = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Instructor not found"));
+
+        // Verify the user is actually an instructor
+        if (instructor.getRole() != Roles.INSTRUCTOR) {
+            throw new RuntimeException("Selected user is not an instructor.");
+        }
+
+        // Check whether instructor has courses
+        if (!instructor.getCourses().isEmpty()) {
+            throw new RuntimeException(
+                    "Cannot delete instructor. Instructor has assigned courses.");
+        }
+
+        userRepository.delete(instructor);
+
+        return "Instructor deleted successfully";
+    }
 }

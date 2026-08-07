@@ -43,12 +43,4 @@ public class Course {
 @JsonIgnore
 private List<Certificate> certificates;
 
-    @OneToMany(
-            mappedBy = "course",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-    @JsonIgnore
-    private List<Progress> progresses;
-
 }

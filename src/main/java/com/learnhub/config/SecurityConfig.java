@@ -37,7 +37,7 @@ public class SecurityConfig {
                         //ADMIN
                         .requestMatchers(HttpMethod.POST,"/api/course/**","/api/auth/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.PUT,"/api/course/**").hasAuthority("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE,"/api/course/**").hasAuthority("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/api/course/**","/api/instructor/delete/**").hasAuthority("ADMIN")
                         //Admin +student
                         .requestMatchers(HttpMethod.GET,"/api/certificate/my","/api/course/**","/api/admin/dashboard","/api/student/**").hasAnyAuthority("ADMIN","STUDENT")
                         //Student+Instructor
