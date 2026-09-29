@@ -1,6 +1,7 @@
 package com.learnhub.controller;
 
 import com.learnhub.dto.CertificateDTO;
+import com.learnhub.response.QrCodeUtil;
 import com.learnhub.service.CertificateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -32,6 +33,36 @@ public class CertificateController {
     @GetMapping
     public List<CertificateDTO> getCertificates() {
         return certificateService.generateCertificatesByStudent();
+    }
+    @GetMapping("/verify/{certificateNumber}")
+    public ResponseEntity<?> verifyCertificate(
+            @PathVariable String certificateNumber) {
+
+        return ResponseEntity.ok(
+                certificateService.verifyCertificate(
+                        certificateNumber
+                )
+        );
+    }
+    @GetMapping("/qr/{certificateNumber}")
+    public ResponseEntity<byte[]> generateQr(
+            @PathVariable String certificateNumber)
+            throws Exception {
+
+        String verifyUrl =
+                "http://localhost:4200/verify?cert="
+                        + certificateNumber;
+
+        byte[] qr =
+                QrCodeUtil.generateQrCode(
+                        verifyUrl,
+                        250,
+                        250
+                );
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_PNG)
+                .body(qr);
     }
 
 }

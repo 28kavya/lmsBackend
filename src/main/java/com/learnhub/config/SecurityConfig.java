@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(req ->req
                         //AUTHCONTROLLER
                         .requestMatchers(HttpMethod.POST,"/api/auth/register","/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/certificates/**").permitAll()
 
                         //ADMIN
                         .requestMatchers(HttpMethod.POST,"/api/course/**","/api/auth/**").hasAuthority("ADMIN")

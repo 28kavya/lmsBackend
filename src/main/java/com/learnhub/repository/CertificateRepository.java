@@ -15,5 +15,6 @@ public interface CertificateRepository
                                                      Long courseId);
     boolean existsByStudentIdAndCourseId(Long studentId, Long courseId);
     long countByStudentId(Long studentId);
+    Optional<Certificate> findByCertificateNumber(String certificateNumber);
 
 }
